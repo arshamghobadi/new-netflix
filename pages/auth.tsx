@@ -42,11 +42,11 @@ const Auth = () => {
         password,
       });
 
-      // login();
+      login();
     } catch (error) {
       console.error(error);
     }
-  }, [email, name, password]);
+  }, [email, name, password, login]);
 
   return (
     <div className=" relative h-full w-full bg-[url('/images/hero.jpg')] bg-no-repeat bg-center bg-fixed bg-cover">
