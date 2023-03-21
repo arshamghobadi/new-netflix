@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Inputs from '../components/Inputs';
 import axios from 'axios';
 import { signIn } from 'next-auth/react';
@@ -15,6 +15,14 @@ const Auth = () => {
   const [password, setPassword] = useState('');
   const [variant, setVariant] = useState('login');
 
+  useEffect(() => {
+    fetch('/api/current')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === 'success') router.replace('/profile');
+      });
+  }, [router]);
+
   const toggleVariant = useCallback(() => {
     setVariant((currentVariiant) =>
       currentVariiant === 'login' ? 'register' : 'login'
@@ -28,7 +36,7 @@ const Auth = () => {
 
         password,
       });
-      router.push('/');
+      router.push('/profile');
     } catch (error) {
       console.error(error);
     }

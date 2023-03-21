@@ -13,7 +13,9 @@ export default async function handler(
   }
   try {
     const expriation = 24 * 60 * 60;
-    const { email, password } = req.body;
+    const { email, password, name } = req.body;
+    console.log(req.body);
+
     if (!email || !password) {
       throw new Error('Email and password required');
     }

@@ -1,6 +1,5 @@
+import verifyToken from '@/utils/verfyToken';
 import { NextApiRequest, NextApiResponse } from 'next';
-
-import serverAuth from '../../lib/serverAuth';
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,9 +8,24 @@ export default async function handler(
   if (req.method !== 'GET') {
     return res.status(405).end();
   }
+  const secretKey = process.env.SECRET_KEY;
+
   try {
-    const { currentUser } = await serverAuth(req);
-    return res.status(200).json(currentUser);
+    const { token } = req.cookies;
+    if (!token) {
+      return res
+        .status(401)
+        .json({ status: 'fialed', message: 'you are not logged in' });
+    }
+    const result = verifyToken(token, secretKey!);
+
+    if (result) {
+      res.status(200).json({ status: 'success', data: result });
+    } else {
+      res
+        .status(401)
+        .json({ status: 'failed', messsage: 'you are unauthorized' });
+    }
   } catch (error) {
     console.error(error);
     return res.status(400).end();
